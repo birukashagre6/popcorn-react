@@ -1,4 +1,5 @@
 import { useState } from "react";
+import StarRating from "./StarRating";
 const tempMovieData = [
   {
     imdbID: "tt1375666",
