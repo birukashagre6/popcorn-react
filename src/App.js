@@ -1,4 +1,5 @@
 import { useState } from "react";
+import StarRating from "./StarRating";
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -49,9 +50,16 @@ const tempWatchedData = [
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
+const Key = "c6c667c8";
+
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
+  const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState(tempWatchedData);
+
+  fetch(`http://www.omdbapi.com/?apikey=${Key}&s=interstellar`)
+    .then((res) => res.json())
+    .then((data) => setMovies(data.Search));
+
   return (
     <>
       <NavBar>
