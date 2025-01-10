@@ -10,7 +10,7 @@ export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [query, setQuery] = useState("inception");
+  const [query, setQuery] = useState("");
   const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
@@ -57,7 +57,10 @@ export default function App() {
           setMovies(data.Search);
           setError("");
         } catch (error) {
-          setError(error.message);
+          if (error.name !== "AbortError") {
+            console.log(error.message);
+            setError(error.message);
+          }
         } finally {
           setIsLoading(false);
         }
@@ -68,6 +71,8 @@ export default function App() {
           return;
         }
       }
+
+      handleCloseMovie();
       fetchMovies();
 
       return function () {
@@ -264,6 +269,23 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const watchedUserRating = watched.find(
     (movie) => movie.imdbID === selectedId
   )?.userRating;
+
+  useEffect(
+    function () {
+      function callback(e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+        }
+      }
+      document.addEventListener("keydown", callback);
+
+      return function () {
+        document.removeEventListener("keydown", callback);
+      };
+    },
+
+    [onCloseMovie]
+  );
 
   useEffect(
     function () {
