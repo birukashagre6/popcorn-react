@@ -127,7 +127,7 @@ function Logo() {
   return (
     <div className="logo">
       <span role="img">🍿</span>
-      <h1>Popcorn</h1>
+      <h1>usePopcorn</h1>
     </div>
   );
 }
@@ -251,6 +251,12 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     onCloseMovie();
   }
 
+  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
+
+  const watchedUserRating = watched.find(
+    (movie) => movie.imdbID === selectedId
+  )?.userRating;
+
   useEffect(
     function () {
       async function getMovieDetails() {
@@ -268,11 +274,9 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     [selectedId]
   );
 
-  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
-
-  const watchedUserRating = watched.find(
-    (movie) => movie.imdbID === selectedId
-  )?.userRating;
+  useEffect(function () {
+    document.title = `Movie | ${title}`;
+  }, []);
 
   return (
     <div className="details">
