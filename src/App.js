@@ -32,12 +32,15 @@ export default function App() {
 
   useEffect(
     function () {
+      const controller = new AbortController();
+
       async function fetchMovies() {
         try {
           setError("");
           setIsLoading(true);
           const res = await fetch(
-            `https://www.omdbapi.com/?apikey=${Key}&s=${query}`
+            `https://www.omdbapi.com/?apikey=${Key}&s=${query}`,
+            { signal: controller.signal }
           );
 
           if (!res.ok) {
@@ -52,6 +55,7 @@ export default function App() {
           }
 
           setMovies(data.Search);
+          setError("");
         } catch (error) {
           setError(error.message);
         } finally {
@@ -65,6 +69,10 @@ export default function App() {
         }
       }
       fetchMovies();
+
+      return function () {
+        controller.abort();
+      };
     },
     [query]
   );
